@@ -1,13 +1,17 @@
 package com.social.media.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SocialUser {
 
     @Id
@@ -15,7 +19,7 @@ public class SocialUser {
     private Long id;
 
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private SocialProfile socialProfile;
 
     @OneToMany(mappedBy = "socialUser")
@@ -27,6 +31,16 @@ public class SocialUser {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id")
     )
-    private Set<socialGroup> groups = new HashSet<>();
+    private Set<SocialGroup> groups = new HashSet<>();
+
+    public int hashCode(){
+        return Objects.hash(id);
+    }
+
+    public void setSocialProfile(SocialProfile socialProfile) {
+        socialProfile.setUser(this);
+        this.socialProfile = socialProfile;
+    }
+
 
 }
